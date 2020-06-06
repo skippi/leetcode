@@ -2,5 +2,5 @@
   pkgs ? import <nixpkgs> {}
 }:
 with pkgs; mkShell {
-  buildInputs = [rustc cargo];
+  buildInputs = [rustc cargo rustfmt];
 }

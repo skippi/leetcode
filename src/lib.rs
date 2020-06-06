@@ -1,3 +1,7 @@
+#![deny(warnings)]
+
+mod two_sum;
+
 #[cfg(test)]
 mod tests {
     #[test]
