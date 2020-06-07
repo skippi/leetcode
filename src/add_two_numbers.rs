@@ -6,10 +6,30 @@ struct ListNode {
 
 #[allow(dead_code)]
 fn add_two_numbers(
-    _l1: Option<Box<ListNode>>,
-    _l2: Option<Box<ListNode>>,
+    mut l1: Option<Box<ListNode>>,
+    mut l2: Option<Box<ListNode>>,
 ) -> Option<Box<ListNode>> {
-    None
+    let mut head = Box::new(ListNode { val: 0, next: None });
+    let mut current = &mut head;
+    let mut remainder = 0;
+
+    loop {
+        let x = l1.iter().map(|node| node.val).next().unwrap_or(0);
+        let y = l2.iter().map(|node| node.val).next().unwrap_or(0);
+        let sum = x + y + remainder;
+        current.val = sum % 10;
+        remainder = sum / 10;
+
+        l1 = l1.and_then(|n| n.next);
+        l2 = l2.and_then(|n| n.next);
+
+        if l1.is_none() && l2.is_none() && remainder == 0 {
+            break Some(head);
+        }
+
+        current.next = Some(Box::new(ListNode { val: 0, next: None }));
+        current = current.next.as_mut().unwrap();
+    }
 }
 
 #[cfg(test)]
