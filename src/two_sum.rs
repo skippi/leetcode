@@ -23,7 +23,7 @@ fn two_sum_naive(nums: Vec<i32>, target: i32) -> Vec<i32> {
         let result = nums
             .iter()
             .enumerate()
-            .skip(1)
+            .skip(i + 1)
             .find(|&(j, &y)| x + y == target && i != j)
             .map(|(j, _)| vec![i as i32, j as i32]);
 
