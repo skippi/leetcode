@@ -34,16 +34,8 @@ fn length_of_longest_substring_naive(s: String) -> i32 {
 }
 
 fn is_unique(string: &str) -> bool {
-    let mut chars = HashSet::new();
-    for c in string.chars() {
-        if chars.contains(&c) {
-            return false;
-        }
-
-        chars.insert(c);
-    }
-
-    true
+    let mut seen = HashSet::new();
+    string.chars().all(|c| seen.insert(c))
 }
 
 #[cfg(test)]
@@ -52,22 +44,24 @@ mod tests {
 
     #[test]
     fn test_length_of_longest_substring_naive() {
-        assert_eq!(length_of_longest_substring_naive("abcabcbb".to_string()), 3);
-        assert_eq!(length_of_longest_substring_naive("bbbbb".to_string()), 1);
-        assert_eq!(length_of_longest_substring_naive("pwwkew".to_string()), 3);
-        assert_eq!(length_of_longest_substring_naive(" ".to_string()), 1);
+        apply_tests(length_of_longest_substring_naive);
     }
 
     #[test]
     fn test_is_unique() {
         assert_eq!(is_unique(" "), true);
+        assert_eq!(is_unique("ada"), false);
     }
 
     #[test]
     fn test_length_of_longest_substring() {
-        assert_eq!(length_of_longest_substring("abcabcbb".to_string()), 3);
-        assert_eq!(length_of_longest_substring("bbbbb".to_string()), 1);
-        assert_eq!(length_of_longest_substring("pwwkew".to_string()), 3);
-        assert_eq!(length_of_longest_substring(" ".to_string()), 1);
+        apply_tests(length_of_longest_substring);
+    }
+
+    fn apply_tests<F: Fn(String) -> i32>(fun: F) {
+        assert_eq!(fun("abcabcbb".to_string()), 3);
+        assert_eq!(fun("bbbbb".to_string()), 1);
+        assert_eq!(fun("pwwkew".to_string()), 3);
+        assert_eq!(fun(" ".to_string()), 1);
     }
 }
