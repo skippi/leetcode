@@ -29,12 +29,12 @@ fn merge_trees(
         (None, t2) => t2,
         (t1, None) => t1,
         (Some(t1), Some(t2)) => {
-            let mut t1 = t1.borrow_mut();
-            let mut t2 = t2.borrow_mut();
+            let t1 = t1.borrow();
+            let t2 = t2.borrow();
             let node = TreeNode {
                 val: t1.val + t2.val,
-                left: merge_trees(t1.left.take(), t2.left.take()),
-                right: merge_trees(t1.right.take(), t2.right.take()),
+                left: merge_trees(t1.left.clone(), t2.left.clone()),
+                right: merge_trees(t1.right.clone(), t2.right.clone()),
             };
             Some(Rc::new(RefCell::new(node)))
         }
