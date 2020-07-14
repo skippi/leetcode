@@ -1,19 +1,17 @@
 #[allow(dead_code)]
 fn daily_temperatures(t: Vec<i32>) -> Vec<i32> {
-    let mut result = vec![];
+    let mut result = vec![0; t.len()];
     let mut days_stack = vec![];
-    for (i, &temperature) in t.iter().enumerate().rev() {
-        while !days_stack.is_empty() && t[*days_stack.last().unwrap()] <= temperature {
+    for i in (0..t.len()).rev() {
+        while !days_stack.is_empty() && t[*days_stack.last().unwrap()] <= t[i] {
             days_stack.pop();
         }
-        let days_away = match days_stack.last() {
-            Some(j) => j - i,
+        result[i] = match days_stack.last() {
+            Some(j) => (j - i) as i32,
             None => 0,
         };
-        result.push(days_away as i32);
         days_stack.push(i);
     }
-    result.reverse();
     result
 }
 
