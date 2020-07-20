@@ -1,3 +1,14 @@
+/// Central idea: permutations are just swaps of the original data collection.
+/// This implementation essentially swaps the beginning number with some part of the `nums` vector
+/// (as indicated by the for loop). After it does the swap, it then recurses with the "tail" part
+/// of the vector. If you're not familiar with this concept, read up on head and tail pattern in
+/// functional programming. Once the recursion involves only one element, the currently swapped
+/// permutation gets pushed onto the result vector. Finally, the swaps are "unwinded" (or undone)
+/// to allow for a new permutation to form.
+///
+/// Other concepts that might help:
+/// - The maximum number of swaps needed to find a unique permutation is n - 1. This matches with
+/// the implementation below, which performs 2 swaps for a 3-vector input.
 #[allow(dead_code)]
 fn permute(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
     fn do_permute(nums: &mut Vec<i32>, result: &mut Vec<Vec<i32>>, start: usize, end: usize) {
