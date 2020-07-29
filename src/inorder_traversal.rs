@@ -36,6 +36,44 @@ fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
     }
 }
 
+/// Think about how the recursive implementation works from a stack perspective.  That
+/// implementation "folds" out to the left until it reaches the left most node, after which the
+/// implementation retracts towards the right to iterate the tree in-order.
+///
+/// Keeping this in mind, we can mimic the same implementation using just a stack.  This is done by
+/// pushing left nodes continuously until the leftmost node is reached.  We can then iterate these
+/// nodes by popping the stack to mimic the recursive method.
+///
+/// However, if one of these popped nodes has a right branch, then we need to "restart" the
+/// algorithm from the beginning. This is because, like the recursive solution, we need to "fold"
+/// out all the leftward nodes. Think about it: If we only iterate left nodes, we'll never reach
+/// the branches that originate from a right branch. :^)
+#[allow(dead_code)]
+fn inorder_traversal_iterative(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+    let mut result = vec![];
+    let mut stack: Vec<Option<*mut TreeNode>> = vec![];
+    stack.push(root.as_ref().map(|o| o.as_ptr()));
+    while let Some(top) = stack.pop() {
+        let mut current = top;
+        while let Some(node) = current {
+            stack.push(current);
+            unsafe { current = (*node).left.as_ref().map(|o| o.as_ptr()) }
+        }
+        while let Some(elem) = stack.pop() {
+            unsafe {
+                if let Some(node1) = elem {
+                    result.push((*node1).val);
+                    if (*node1).right.is_some() {
+                        stack.push((*node1).right.as_ref().map(|o| o.as_ptr()));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    result
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -68,13 +106,19 @@ mod tests {
 
     #[test]
     fn test_inorder_traversal() {
-        assert_eq!(inorder_traversal(tree![Some(1)]), vec![1]);
-        assert_eq!(inorder_traversal(tree![]), vec![]);
-        assert_eq!(inorder_traversal(tree![Some(3)]), vec![3]);
-        assert_eq!(inorder_traversal(tree![Some(1), Some(2)]), vec![2, 1]);
-        assert_eq!(
-            inorder_traversal(tree![Some(1), None, Some(2), Some(3)]),
-            vec![1, 3, 2]
-        );
+        run_tests(inorder_traversal);
+    }
+
+    #[test]
+    fn test_inorder_traversal_iterative() {
+        run_tests(inorder_traversal_iterative);
+    }
+
+    fn run_tests<F: Fn(Option<Rc<RefCell<TreeNode>>>) -> Vec<i32>>(fun: F) {
+        assert_eq!(fun(tree![Some(1)]), vec![1]);
+        assert_eq!(fun(tree![]), vec![]);
+        assert_eq!(fun(tree![Some(3)]), vec![3]);
+        assert_eq!(fun(tree![Some(1), Some(2)]), vec![2, 1]);
+        assert_eq!(fun(tree![Some(1), None, Some(2), Some(3)]), vec![1, 3, 2]);
     }
 }
