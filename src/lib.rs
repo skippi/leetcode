@@ -1,6 +1,7 @@
 #![deny(warnings)]
 
 mod add_two_numbers;
+mod combine;
 mod count_bits;
 mod daily_temperatures;
 mod generate_parenthesis;
