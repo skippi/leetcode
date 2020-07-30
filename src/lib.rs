@@ -12,5 +12,6 @@ mod permutations;
 mod queue_reconstruction_by_height;
 mod reverse_list;
 mod single_number;
+mod subsets;
 mod two_sum;
 mod valid_parentheses;
