@@ -14,11 +14,12 @@ impl ListNode {
 
 #[allow(dead_code)]
 fn reverse_list(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-    let mut result: Option<Box<ListNode>> = None;
-    while head.is_some() {
-        let val = head.as_ref().map(|n| n.val).unwrap();
-        result = Some(Box::new(ListNode { val, next: result }));
-        head = head.and_then(|node| node.next);
+    let mut result = None;
+    while let Some(mut node) = head {
+        let tail = node.next.take();
+        node.next = result;
+        result = Some(node);
+        head = tail;
     }
     result
 }
