@@ -10,6 +10,7 @@ mod maximum_depth_of_binary_tree;
 mod merge_two_binary_trees;
 mod permutations;
 mod queue_reconstruction_by_height;
+mod reverse_list;
 mod single_number;
 mod two_sum;
 mod valid_parentheses;
