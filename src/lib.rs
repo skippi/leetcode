@@ -7,6 +7,7 @@ mod daily_temperatures;
 mod generate_parenthesis;
 mod inorder_traversal;
 mod is_same_tree;
+mod is_symmetric;
 mod longest_substring_without_repeating_characters;
 mod maximum_depth_of_binary_tree;
 mod merge_two_binary_trees;
