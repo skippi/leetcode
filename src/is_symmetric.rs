@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -18,6 +19,33 @@ impl TreeNode {
             right: None,
         }
     }
+}
+
+#[allow(dead_code)]
+fn is_symmetric_iterative(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+    let mut queue: VecDeque<Option<&Rc<RefCell<TreeNode>>>> = VecDeque::new();
+    queue.push_back(root.as_ref());
+    queue.push_back(root.as_ref());
+    while queue.len() >= 2 {
+        let a = queue.pop_front().unwrap();
+        let b = queue.pop_front().unwrap();
+        match (a, b) {
+            (Some(x), Some(y)) => unsafe {
+                let a = x.as_ptr();
+                let b = y.as_ptr();
+                if (*a).val != (*b).val {
+                    return false;
+                }
+                queue.push_back((*a).left.as_ref());
+                queue.push_back((*b).right.as_ref());
+                queue.push_back((*a).right.as_ref());
+                queue.push_back((*b).left.as_ref());
+            },
+            (None, Some(_)) | (Some(_), None) => return false,
+            _ => {}
+        }
+    }
+    true
 }
 
 #[allow(dead_code)]
@@ -42,7 +70,6 @@ fn is_mirror(a: Option<&Rc<RefCell<TreeNode>>>, b: Option<&Rc<RefCell<TreeNode>>
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::VecDeque;
 
     macro_rules! tree {
         [ $($x:expr),*] => { make_tree(vec![$($x,)*]) };
@@ -70,9 +97,18 @@ mod tests {
     }
 
     #[test]
+    fn test_is_symmetric_iterative() {
+        run_tests(is_symmetric_iterative);
+    }
+
+    #[test]
     fn test_is_symmetric() {
-        assert!(is_symmetric(tree![]));
-        assert!(!is_symmetric(tree![
+        run_tests(is_symmetric);
+    }
+
+    fn run_tests<F: Fn(Option<Rc<RefCell<TreeNode>>>) -> bool>(fun: F) {
+        assert!(fun(tree![]));
+        assert!(!fun(tree![
             Some(1),
             Some(2),
             Some(2),
@@ -81,7 +117,7 @@ mod tests {
             None,
             Some(3)
         ]));
-        assert!(is_symmetric(tree![
+        assert!(fun(tree![
             Some(1),
             Some(2),
             Some(2),
@@ -90,6 +126,6 @@ mod tests {
             Some(4),
             Some(3)
         ]));
-        assert!(!is_symmetric(tree![Some(1), Some(2), Some(3)]))
+        assert!(!fun(tree![Some(1), Some(2), Some(3)]))
     }
 }
