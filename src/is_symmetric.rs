@@ -22,40 +22,20 @@ impl TreeNode {
 
 #[allow(dead_code)]
 fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
-    match root {
-        None => true,
-        Some(node) => {
-            let mut node = node.borrow_mut();
-            equal_tree(node.left.take(), flip_tree(node.right.take()))
-        }
-    }
+    is_mirror(root.as_ref(), root.as_ref())
 }
 
-fn equal_tree(a: Option<Rc<RefCell<TreeNode>>>, b: Option<Rc<RefCell<TreeNode>>>) -> bool {
+fn is_mirror(a: Option<&Rc<RefCell<TreeNode>>>, b: Option<&Rc<RefCell<TreeNode>>>) -> bool {
     match (a, b) {
         (None, None) => true,
         (Some(x), Some(y)) => {
-            let mut a = x.borrow_mut();
-            let mut b = y.borrow_mut();
+            let a = x.borrow();
+            let b = y.borrow();
             a.val == b.val
-                && equal_tree(a.left.take(), b.left.take())
-                && equal_tree(a.right.take(), b.right.take())
+                && is_mirror(a.left.as_ref(), b.right.as_ref())
+                && is_mirror(a.right.as_ref(), b.left.as_ref())
         }
         _ => false,
-    }
-}
-
-fn flip_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
-    match root {
-        None => None,
-        Some(node) => unsafe {
-            let mut borrowed = node.as_ptr();
-            let flipped_left = flip_tree((*borrowed).left.take());
-            let flipped_right = flip_tree((*borrowed).right.take());
-            (*borrowed).left = flipped_right;
-            (*borrowed).right = flipped_left;
-            Some(node)
-        },
     }
 }
 
