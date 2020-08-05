@@ -5,6 +5,7 @@ mod combine;
 mod count_bits;
 mod daily_temperatures;
 mod generate_parenthesis;
+mod increasing_bst;
 mod inorder_traversal;
 mod is_same_tree;
 mod is_symmetric;
