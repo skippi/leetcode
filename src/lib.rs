@@ -7,6 +7,7 @@ mod daily_temperatures;
 mod generate_parenthesis;
 mod increasing_bst;
 mod inorder_traversal;
+mod invert_tree;
 mod is_same_tree;
 mod is_symmetric;
 mod longest_substring_without_repeating_characters;
