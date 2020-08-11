@@ -18,5 +18,6 @@ mod queue_reconstruction_by_height;
 mod reverse_list;
 mod single_number;
 mod subsets;
+mod top_k_frequent;
 mod two_sum;
 mod valid_parentheses;
