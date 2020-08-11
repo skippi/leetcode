@@ -22,7 +22,22 @@ impl TreeNode {
 
 #[allow(dead_code)]
 fn increasing_bst(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
-    root
+    let mut result = None;
+    dfs(root.as_ref(), &mut result);
+    result
+}
+
+fn dfs(tree: Option<&Rc<RefCell<TreeNode>>>, result: &mut Option<Rc<RefCell<TreeNode>>>) {
+    if let Some(x) = tree {
+        let node = x.borrow();
+        dfs(node.right.as_ref(), result);
+        *result = Some(Rc::new(RefCell::new(TreeNode {
+            val: node.val,
+            left: None,
+            right: result.take(),
+        })));
+        dfs(node.left.as_ref(), result);
+    }
 }
 
 #[cfg(test)]
@@ -59,5 +74,13 @@ mod tests {
     fn test_increasing_bst() {
         assert_eq!(increasing_bst(tree![None]), None);
         assert_eq!(increasing_bst(tree![Some(1)]), tree![Some(1)]);
+        assert_eq!(
+            increasing_bst(tree![Some(2), Some(1)]),
+            tree![Some(1), None, Some(2)]
+        );
+        assert_eq!(
+            increasing_bst(tree![Some(2), Some(1), Some(3), Some(0)]),
+            tree![Some(0), None, Some(1), None, Some(2), None, Some(3)]
+        );
     }
 }
