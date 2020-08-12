@@ -7,12 +7,12 @@ fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
     for n in nums {
         *counts.entry(n).or_insert(0) += 1;
     }
-    let mut counts = counts.into_iter().collect::<Vec<(i32, i32)>>();
+    let mut counts: Vec<_> = counts.into_iter().collect();
     counts.sort_unstable_by_key(|(_, count)| Reverse(count.clone()));
     counts
         .into_iter()
-        .map(|(n, _)| n)
         .take(k as usize)
+        .map(|(n, _)| n)
         .collect()
 }
 
@@ -26,7 +26,7 @@ fn top_k_frequent_quicksearch(nums: Vec<i32>, k: i32) -> Vec<i32> {
     for n in nums {
         *counts.entry(n).or_insert(0) += 1;
     }
-    let mut counts = counts.into_iter().collect::<Vec<(i32, i32)>>();
+    let mut counts: Vec<_> = counts.into_iter().collect();
     (0..k as usize)
         .map(|i| {
             *quicksearch_by(&mut counts, i, |(n, count)| {
@@ -83,14 +83,17 @@ mod tests {
 
     #[test]
     fn test_top_k_frequent() {
-        assert_eq!(top_k_frequent(vec![], 5), vec![]);
-        assert_eq!(top_k_frequent(vec![1, 1, 2], 1), vec![1]);
+        run_tests(top_k_frequent)
     }
 
     #[test]
     fn test_top_k_frequent_quicksearch() {
-        // assert_eq!(top_k_frequent_quicksearch(vec![], 5), vec![]);
-        // assert_eq!(top_k_frequent_quicksearch(vec![1, 1, 2], 1), vec![1]);
-        assert_eq!(top_k_frequent_quicksearch(vec![1, 2], 2), vec![1, 2]);
+        run_tests(top_k_frequent_quicksearch)
+    }
+
+    fn run_tests<F: Fn(Vec<i32>, i32) -> Vec<i32>>(f: F) {
+        assert_eq!(f(vec![], 5), vec![]);
+        assert_eq!(f(vec![1, 1, 2], 1), vec![1]);
+        assert_eq!(f(vec![1, 2], 2), vec![1, 2]);
     }
 }
