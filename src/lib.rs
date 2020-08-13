@@ -3,6 +3,7 @@
 mod add_two_numbers;
 mod combine;
 mod count_bits;
+mod count_substrings;
 mod daily_temperatures;
 mod generate_parenthesis;
 mod increasing_bst;
