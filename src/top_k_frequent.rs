@@ -94,6 +94,6 @@ mod tests {
     fn run_tests<F: Fn(Vec<i32>, i32) -> Vec<i32>>(f: F) {
         assert_eq!(f(vec![], 5), vec![]);
         assert_eq!(f(vec![1, 1, 2], 1), vec![1]);
-        assert_eq!(f(vec![1, 2], 2), vec![1, 2]);
+        assert!([vec![1, 2], vec![2, 1]].contains(&f(vec![1, 2], 2)));
     }
 }
